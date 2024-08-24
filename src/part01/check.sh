@@ -1,8 +1,5 @@
 #!/bin/bash
 
-free_memory_kb=$(df / | awk 'NR==2{print $4}')
-free_memory_mb=$(echo "$free_memory_kb 1024" | awk '{printf "%.0f", $1 / $2}')
-
 error_target=0
 NUMBER='[^0-9]+'
 ALPHABET='[^a-zA-Z]+'
@@ -17,8 +14,11 @@ file_name=$5
 size_file=$6
 
 
-# Echo memory: mb
-echo -e "${GREEN}free memory mb${NC}: $free_memort_mb"
+# free_memory_kb=$(df / | awk 'NR==2{print $4}')
+# free_memory_mb=$(echo "$free_memory_kb 1024" | awk '{printf "%.0f", $1 / $2}')
+
+# # Echo memory: mb
+# echo -e "${GREEN}free memory mb${NC}: $free_memort_mb"
 
 
 # Checking for six parameters
@@ -27,9 +27,9 @@ if [ "$#" -ne 6 ]; then
 	exit 1
 fi
 avail_size=$(df -k / | grep /dev/mapper/ | awk '{print $4}')
-if [ $avail_size -le 1048576 ]; them
+	echo -e "${GREEN}Free memory up to${NC}: $avail_size"
+if [ $avail_size -le 1048576 ]; then
 	echo -e "${RED}ERROR${NC}: Not enough memory"
-	echo "Memory $avail_size"
 	exit 1
 fi
 
@@ -57,7 +57,7 @@ fi
 
 # Third parameter
 no_repeat_cheker_dir=$(echo $dir_name | sed 's/\(.\)\1/\1/g')
-if [ ${#dir_name} -gt 7]; then
+if [ ${#dir_name} -gt 7 ]; then
 	if [[ $error_target == 1 ]]; then
 		echo 
 	fi
@@ -71,7 +71,7 @@ elif [[ $dir_name =~ $ALPHABET ]]; then
 	echo -e "${RED}ERROR${NC}: Only latin latters should be used to generate the folder name"
 	echo " Erroneous argument №3: $dir_name"
 	error_target=1
-elif [[ ${#no_repeat_cheker_dir} -ne ${#dir_name}]]
+elif [[ ${#no_repeat_cheker_dir} -ne ${#dir_name} ]]; then
 	if [[ $error_target == 1 ]]; then
 		echo 
 	fi
@@ -92,8 +92,8 @@ fi
 
 
 # Fifth parameter
-symbol_for_file_name=${$file_name%.*}
-symbol_for_expansion_file=${$file_name#*.}
+symbol_for_file_name=${file_name%.*}
+symbol_for_expansion_file=${file_name#*.}
 no_repeat_cheker_file_name=$(echo $file_name | sed 's/\(.\)\1/\1/g')
 no_repeat_cheker_file_expansion=$(echo $file_name | sed 's/\(.\)\1/\1/g')
 if [[ ! $file_name == *.* ]]; then
@@ -128,7 +128,7 @@ else
 		echo " Erroneus argument №5: $file_name"
 		error_target=1
 	elif [[ $symbol_for_expansion_file =~ $ALPHABET ]]; then 
-		if [[ $error_target == 1]]; then
+		if [[ $error_target == 1 ]]; then
 			echo
 		fi
 		echo -e "${RED}ERROR${NC}: Only latin letters should be used to generate the file expansion. "
@@ -165,7 +165,7 @@ fi
 
 
 # Block for creating directories and files with unique names and dates
-if [[ $error_target != 1]]; then
+if [[ $error_target != 1 ]]; then
 	touch "file-log.log"
 	for (( i=1; i<=${number_of_folders}; i++))
 	do 
@@ -177,7 +177,7 @@ if [[ $error_target != 1]]; then
 		name_dir="$(bash create.sh $dir_name $i)"
 		mkdir "${path}${name_dir}${date}"
 		echo -e "${path}${name_dir}${date}/\t\t\t\t\t$(date +"%d.%m.%y")" >> file-log.log
-		for (( j=1; j <=${number_of_file}; j++))
+		for (( j=1; j <=${number_of_files}; j++))
 		do
 			avail_size=$(df -k / | grep /dev/mapper/ | awk '{print $4}')
 			if [ $avail_size -le 1048576 ]; then
@@ -187,7 +187,7 @@ if [[ $error_target != 1]]; then
 			name_file="$(bash create.sh $symbol_for_file_name $((j)))"
 			fallocate -l ${size_file} "${path}${name_dir}${data}/${name_file}${data}.${symbol_for_expansion_file}"
 			echo -e "${path}${name_dir}${data}/${name_file}${data}.${symbol_for_expansion_file}\t$(date +"%d".%m.%y)" >> file-log.log
-			echo -e "${GREEN}Free memory${NC}: $avail_size"
+			echo -e "${GREEN}Free memory after${NC}: $avail_size"
 		done
 
 	done
