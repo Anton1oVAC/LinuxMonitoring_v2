@@ -3,7 +3,7 @@
 error_target=0
 NUMBER='[^0-9]+'
 ALPHABET='[^a-zA-Z]+'
-data="_$(date +"%d%m%y")"
+date="_$(date +"%d%m%y")"
 
 # Parameter
 path=$1
@@ -167,7 +167,8 @@ fi
 # Block for creating directories and files with unique names and dates
 if [[ $error_target != 1 ]]; then
 	touch "file-log.log"
-	for (( i=1; i<=${number_of_folders}; i++))
+	date="_$(date +"%d%m%y")"
+	for (( i=1; i<=${number_of_folders}; i++ ))
 	do 
 		avail_size=$(df -k / | grep /dev/mapper/ | awk '{print $4}')
 		if [ $avail_size -le 1048576 ]; then 
@@ -177,7 +178,7 @@ if [[ $error_target != 1 ]]; then
 		name_dir="$(bash create.sh $dir_name $i)"
 		mkdir "${path}${name_dir}${date}"
 		echo -e "${path}${name_dir}${date}/\t\t\t\t\t$(date +"%d.%m.%y")" >> file-log.log
-		for (( j=1; j <=${number_of_files}; j++))
+		for (( j=1; j<=${number_of_files}; j++ ))
 		do
 			avail_size=$(df -k / | grep /dev/mapper/ | awk '{print $4}')
 			if [ $avail_size -le 1048576 ]; then
@@ -185,8 +186,8 @@ if [[ $error_target != 1 ]]; then
 				break
 			fi
 			name_file="$(bash create.sh $symbol_for_file_name $((j)))"
-			fallocate -l ${size_file} "${path}${name_dir}${data}/${name_file}${data}.${symbol_for_expansion_file}"
-			echo -e "${path}${name_dir}${data}/${name_file}${data}.${symbol_for_expansion_file}\t$(date +"%d".%m.%y)" >> file-log.log
+			fallocate -l ${size_num_files} "${path}${name_dir}${date}/${name_file}${date}.${symbol_for_expansion_file}"
+			echo -e "${path}${name_dir}${date}/${name_file}${date}.${symbol_for_expansion_file}\t$(date +"%d".%m.%y) ${size_num_files}" >> file-log.log
 			echo -e "${GREEN}Free memory after${NC}: $avail_size"
 		done
 
