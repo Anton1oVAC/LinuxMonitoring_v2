@@ -19,7 +19,6 @@ if [[ $size_sym -eq 1 ]]; then
     	do
         	name+=$name_sym
     	done
-
 elif [[ $size_sym -eq 2 ]]; then
     count_sym_1=2
     count_sym_2=2
