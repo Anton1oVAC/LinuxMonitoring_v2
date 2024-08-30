@@ -1,5 +1,8 @@
 #!/bin/bash
 
+d=$(date)
+echo "$d"
+
 NC='\033[0m'
 RED='\033[031m'
 GREEN='\033[032m'
