@@ -154,7 +154,7 @@ if [[ $error_target != 1 ]]; then
         for (( j=1; j<=${rand_files}; j++ )) do
             avail_size=$(df -k / | grep /dev/mapper/ | awk '{print $4}')
             	if [ $avail_size -le 1048576 ]; then
-                	echo -e "${RED}Stop${NC}: ${GREEN}Not enough memory for folders${NC}"
+                	echo -e "${RED}Stop${NC}: ${GREEN}Not enough memory for files${NC}"
                 	break
             	fi
             name_file="$(bash create.sh $symbol_for_file_name $((j)))"
